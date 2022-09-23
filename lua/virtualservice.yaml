@@ -1,0 +1,58 @@
+
+---
+group: management
+apiVersion: v1alpha1
+kind: VirtualService
+name: webhooksite
+title: webhooksite
+metadata:
+  id: 8ac98aac83648ef0018364f7a17f00cd
+  audit:
+    createTimestamp: 2022-09-22T11:31:33.887+0000
+    createUserId: 1e25e8bd-589b-4323-be07-590e229389b7
+    modifyTimestamp: 2022-09-22T11:31:33.887+0000
+    modifyUserId: 1e25e8bd-589b-4323-be07-590e229389b7
+  scope:
+    id: 8ac98aac83648ef0018364f79f2b00c9
+    kind: VirtualAPI
+    name: webhooksite
+    title: webhooksite
+    selfLink: /management/v1alpha1/virtualapis/webhooksite
+  acl: []
+  resourceVersion: '0'
+  references: []
+  selfLink: /management/v1alpha1/virtualapis/webhooksite/virtualservices/webhooksite
+attributes: {}
+finalizers: []
+tags: []
+spec:
+  auth:
+    kind: PassthroughAuthRule
+  processors:
+    - lua: 
+        default: |-
+          function envoy_on_request(request_handle)
+            request_handle:headers():add("lua-header-req", "worked")
+          end
+
+          function envoy_on_response(response_handle)
+            response_handle:headers():add("lua-header-resp", "worked")
+            response_handle:headers():remove("foo")
+          end
+  route:
+    - service:
+        codec: AUTO
+        prefix: /dc91489e-3c5c-4905-865b-857024700316
+        protocol: https
+        endpoints:
+          - host: webhook.site
+            port: 443
+        serverCertValidation:
+          allowExpiredCert: true
+          allowUntrustedCert: true
+      operations:
+        - id: getDemo
+          path: /demo
+          method: GET
+  prefix: /hook
+

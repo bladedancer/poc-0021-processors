@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: extproc
+spec:
+  selector:
+    app: extproc
+  type: ClusterIP
+  ports:
+    - protocol: TCP
+      port: 18080
+      targetPort: 18080

@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: extproc-deployment
+  labels:
+    app: extproc
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: extproc
+  template:
+    metadata:
+      labels:
+        app: extproc
+    spec:
+      containers:
+      - name: extproc
+        image: local/ext_proc_demo:1.0.0
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 18080
